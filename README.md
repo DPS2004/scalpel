@@ -1,2 +1,2 @@
-# rdtools
-RDtools: a python toolset for Rhythm Doctor
+# scalpel
+Scalpel: a python toolset for Rhythm Doctor
