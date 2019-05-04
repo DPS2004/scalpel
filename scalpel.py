@@ -2,15 +2,69 @@ from os import system, name
 import os
 import glob
 import sys
+import re
 import msvcrt
+
 consoleinput = "false"
 from PIL import Image
 #IF THINGS ARE NOT WORKING, UNCOMMENT THE FOLLOWING LINE.
 #consoleinput = "true"
-def gifcleanup():
+def filelen(file):
+    with open(file) as f:
+        for i, l in enumerate(f):
+            pass
+    return i + 1
+
+def findline(filename, linenum):
+    line = 0
+    with open(filename, "r") as file:
+        for _ in range(linenum):
+            line = file.readline()
+    return line
+
+
+def smparse(file):
+    print("finding bpms...")
+    with open(file) as openfile:
+        for l in openfile:
+            for part in l.split():
+                if "#BPMS:" in part:
+                    with open("smbpm.temp", "a") as outputfile:
+                        outputfile.write(re.sub("[,=]", "\n", part[6:-1]))
+    print("finding audio file...")
+    with open(file) as openfile:
+        for l in openfile:
+            for part in l.split():
+                if "#MUSIC:" in part:
+                    with open("smaud.temp", "a") as outputfile:
+                        outputfile.write(part[7:-1])
+    print("finding offset...")
+    with open(file) as openfile:
+        for l in openfile:
+            for part in l.split():
+                if "#OFFSET:" in part:
+                    with open("smoff.temp", "a") as outputfile:
+                        outputfile.write(str(abs(float(part[8:-1]) * 1000)))
+    print("done parsing", file)
+
+
+def cleanup(full):
     for item in os.listdir('output/'):
         if item.endswith(".gif"):
             os.remove(os.path.join('output/', item))
+    for item in os.listdir('.'):
+        if item.endswith(".temp"):
+            os.remove(os.path.join('.', item))
+    if full == "y":
+        for item in os.listdir('.'):
+            if item.endswith(".txt"):
+                os.remove(os.path.join('.', item))
+        for item in os.listdir('output/'):
+            if item.endswith(".txt"):
+                os.remove(os.path.join('output/', item))
+        for item in os.listdir('output/'):
+            if item.endswith(".png"):
+                os.remove(os.path.join('output/', item))
 def giflook(inGif):
     frame = Image.open(inGif)
 
@@ -61,20 +115,21 @@ def clear():
         # for mac and linux(here, os.name is 'posix')
     else:
         _ = system('clear')
-
-
+if input("remove files from last use? (y or n)") == "y":
+    cleanup("y")
 print("Welcome to Scalpel. (Super Cool Awesome Level Program: Extra Lines!)")
 while 0 == 0:
     print("1. Effect repeater")
     print("2. Grade calculator")
     print("3. GIF exporter")
     print("4. Clone hero BPM converter")
-    print("5. Credits")
-    print("6. Exit")
+    print("5. Stepmania/itg bpm converter")
+    print("6. Credits")
+    print("7. Exit")
     selection = input("Please enter a number: ")
     if selection == "1":
         clear()
-        bpmeasure = int(input("How many beats per measure? (default is 8)"))
+        bpmeasure = int(input("What is your crotchet length? (default is 8)"))
         firstblock = input('What is the first block? (copy and paste from "y":, to },)')
         secondblock = input('What is the second block? (same format as first)')
         blockdistance = float(input("What is the distance between these events in beats?"))
@@ -123,11 +178,11 @@ while 0 == 0:
         print("Processing gif...")
         giffps = giflook(gifname)
         print("Done processing.")
-        gifcleanup()
+        cleanup("n")
         bpm = int(input("bpm of the song?"))
         framecount = int(input("How many frames?"))
         loopcount = int(input("How many times do you want this gif to play?"))
-        bpmeasure = int(input("How many beats per measure? (default is 8)"))
+        bpmeasure = int(input("What is your chrotchet length? (default is 8)"))
         startmeasure = int(input("What measure should this GIF start at?"))
         startbeat = int(input("What beat? "))
         contentmode = input("how should it be scaled?(ScaleToFill, AspectFit, AspectFill, Center, Tiled)")
@@ -156,10 +211,10 @@ while 0 == 0:
         waitforkey()
         clear()
     if selection == "4":
+        clear()
         infile = input("Enter clone hero file: ")
-
         spacing = int(input("In CH - How long is one beat in position: ")) * 2
-        crochet = int(input("In RD - What is your crochet length: "))
+        crotchet = int(input("In RD - What is your crotchet length: "))
         space = int(input("How many spaces for indentation? (if unsure, put 2)"))
         outfilewrite = open("output.txt", 'w')
         print("Processing...")
@@ -187,8 +242,8 @@ while 0 == 0:
                         continue
 
                     bpm = str(float(info[space + 3]) / 1000)  # math
-                    bar = str(int(int(info[space]) / spacing / crochet) + 1)
-                    beat = str(float(int(info[space]) / spacing % crochet) + 1)
+                    bar = str(int(int(info[space]) / spacing / crotchet) + 1)
+                    beat = str(float(int(info[space]) / spacing % crotchet) + 1)
                     rdstr = '        { "bar": ' + bar + ', "beat": ' + beat + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + bpm + ' },\n'
                     outfilewrite.write(rdstr)
                 outfilewrite.close()
@@ -201,9 +256,41 @@ while 0 == 0:
             clear()
     if selection == "5":
         clear()
-        print("Effect repeater, Gif importer, and grade calculator were made with <3 by DPS2004")
+        smfile = input("fileame of .sm file?")
+        smparse(smfile)
+        newfile = input("make a new .rdlevel file?(y or n)")
+        if newfile == "n":
+            bpmeasure = int(input("What is your crotchet length? (default is 8)"))
+        else:
+            bpmeasure = 8
+        if newfile == "y":
+            outname = "output.rdlevel"
+            with open(outname, "a") as outputfile:
+                outputfile.write('{' + '\n' + '	"settings":' + '\n' + '	{' + '\n' + '		"version": 26, ' + '\n' + '		"artist": "", ' + '\n' + '		"song": "", ' + '\n' + '		"author": "", ' + '\n' + '		"previewImage": "", ' + '\n' + '		"previewSong": "", ' + '\n' + '		"previewSongStartTime": 0, ' + '\n' + '		"previewSongDuration": 10, ' + '\n' + '		"description": "", ' + '\n' + '		"tags": "", ' + '\n' + '		"separate2PLevelFilename": "", ' + '\n' + '		"levelMode": "", ' + '\n' + '		"firstBeatBehavior": "RunNormally", ' + '\n' + '		"multiplayerAppearance": "HorizontalStrips", ' + '\n' + '		"rankMaxMistakes": [20, 15, 10, 5], ' + '\n' + '		"rankDescription":' + '\n' + '		[' + '\n' + '			"Better call 911, now!",' + '\n' + '			"Ugh, you can do better",' + '\n' + '			"Not bad I guess...",' + '\n' + '			"We make a good team!",' + '\n' + '			"You are really good!",' + '\n' + '			"Wow! Thats awesome!!"' + '\n' + '		]' + '\n' + '	},' + '\n' + '	"rows":' + '\n' + '	[' + '\n' + '	],' + '\n' + '	"events":' + '\n' + '	[' + '\n')
+        else:
+            outname = "output.txt"
+        with open(outname, "a") as outputfile:
+            outputfile.write('		{ "bar": 1, "beat": 1, "y": 0, "type": "PlaySong", "filename": "' + findline("smaud.temp", 1) + '", "volume": 100, "offset": ' + findline("smoff.temp", 1) + ', "bpm": ' + findline("smbpm.temp", 2)[:-1] + ' }, ' + '\n')
+        bpmcount = 2
+        while bpmcount < filelen("smbpm.temp"):
+            beatone = (float(findline("smbpm.temp", bpmcount + 1)[:-1]) % bpmeasure) + 1
+            barone = float(findline("smbpm.temp", bpmcount + 1)[:-1]) / bpmeasure
+            newbpm = float(findline("smbpm.temp", bpmcount + 2)[:-1])
+            with open(outname, "a") as outputfile:
+                outputfile.write('		{ "bar": ' + str(round(barone)) + ', "beat": ' + str(beatone) + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + str(abs(newbpm)) + ' }, ' + '\n')
+            bpmcount = bpmcount + 2
+        if newfile == "y":
+            with open(outname, "a") as outputfile:
+                outputfile.write('	]' + '\n' + '}' + '\n')
+        cleanup("n")
+        print("done! check " + outname)
+        waitforkey()
+
+    if selection == "6":
+        clear()
+        print("Effect repeater, Gif importer, Stepmania/itg bpm converter and grade calculator were made with <3 by DPS2004")
         print("Clone hero bpm converter made by Not El Donte and Klyzx")
         waitforkey()
         clear()
-    if selection == "6":
+    if selection == "7":
         break
