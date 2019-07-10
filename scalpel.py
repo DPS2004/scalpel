@@ -1,4 +1,4 @@
-from os import system, name
+from os import system, name, path
 import os
 import glob
 import sys
@@ -124,8 +124,9 @@ while 0 == 0:
     print("3. GIF exporter")
     print("4. Clone hero BPM converter")
     print("5. Stepmania/itg bpm converter")
-    print("6. Credits")
-    print("7. Exit")
+    print("6. Easy Custom Characters")
+    print("7. Credits")
+    print("8. Exit")
     selection = input("Please enter a number: ")
     if selection == "1":
         clear()
@@ -137,7 +138,8 @@ while 0 == 0:
         startmeasure = int(input("What measure should this effect start?"))
         startbeat = float(input("What beat should this effect start?"))
         repeatnumber = int(input("How many times should this effect repeat?"))
-        os.remove("output.txt")
+        if path.exists("output/output.txt"):
+            os.remove("output/output.txt")
         print("Processing...")
         i = 1
         barone = startmeasure
@@ -170,7 +172,6 @@ while 0 == 0:
         print("B rank: " + str(round(hitcount*0.2)) + " misses")
         print("C rank: " + str(round(hitcount*0.3)) + " misses")
         print("D rank: " + str(round(hitcount*0.4)) + " misses")
-        print("F rank: " + str(round(hitcount*0.5)) + " misses")
         waitforkey()
         clear()
     if selection == "3":
@@ -189,6 +190,8 @@ while 0 == 0:
         room = int(input("what room?(if unsure, 0)"))
         yval = int(input("editor Y value? (if unsure, 0)"))
         print("Processing...")
+        if path.exists("output/output.txt"):
+            os.remove("output/output.txt")
         i = 1
         bpf = (bpm / 60) / giffps
         barone = startmeasure
@@ -216,7 +219,9 @@ while 0 == 0:
         spacing = int(input("In CH - How long is one beat in position: ")) * 2
         crotchet = int(input("In RD - What is your crotchet length: "))
         space = int(input("How many spaces for indentation? (if unsure, put 2)"))
-        outfilewrite = open("output.txt", 'w')
+        if path.exists("output/output.txt"):
+            os.remove("output/output.txt")
+        outfilewrite = open("output/output.txt", 'w')
         print("Processing...")
 
 
@@ -264,11 +269,15 @@ while 0 == 0:
         else:
             bpmeasure = 8
         if newfile == "y":
-            outname = "output.rdlevel"
+            if path.exists("output/output.rdlevel"):
+                os.remove("output/output.rdlevel")
+            outname = "output/output.rdlevel"
             with open(outname, "a") as outputfile:
                 outputfile.write('{' + '\n' + '	"settings":' + '\n' + '	{' + '\n' + '		"version": 26, ' + '\n' + '		"artist": "", ' + '\n' + '		"song": "", ' + '\n' + '		"author": "", ' + '\n' + '		"previewImage": "", ' + '\n' + '		"previewSong": "", ' + '\n' + '		"previewSongStartTime": 0, ' + '\n' + '		"previewSongDuration": 10, ' + '\n' + '		"description": "", ' + '\n' + '		"tags": "", ' + '\n' + '		"separate2PLevelFilename": "", ' + '\n' + '		"levelMode": "", ' + '\n' + '		"firstBeatBehavior": "RunNormally", ' + '\n' + '		"multiplayerAppearance": "HorizontalStrips", ' + '\n' + '		"rankMaxMistakes": [20, 15, 10, 5], ' + '\n' + '		"rankDescription":' + '\n' + '		[' + '\n' + '			"Better call 911, now!",' + '\n' + '			"Ugh, you can do better",' + '\n' + '			"Not bad I guess...",' + '\n' + '			"We make a good team!",' + '\n' + '			"You are really good!",' + '\n' + '			"Wow! Thats awesome!!"' + '\n' + '		]' + '\n' + '	},' + '\n' + '	"rows":' + '\n' + '	[' + '\n' + '	],' + '\n' + '	"events":' + '\n' + '	[' + '\n')
         else:
-            outname = "output.txt"
+            if path.exists("output/output.txt"):
+                os.remove("output/output.txt")
+            outname = "output/output.txt"
         with open(outname, "a") as outputfile:
             outputfile.write('		{ "bar": 1, "beat": 1, "y": 0, "type": "PlaySong", "filename": "' + findline("smaud.temp", 1) + '", "volume": 100, "offset": ' + findline("smoff.temp", 1) + ', "bpm": ' + findline("smbpm.temp", 2)[:-1] + ' }, ' + '\n')
         bpmcount = 2
@@ -288,9 +297,48 @@ while 0 == 0:
 
     if selection == "6":
         clear()
-        print("Effect repeater, Gif importer, Stepmania/itg bpm converter and grade calculator were made with <3 by DPS2004")
-        print("Clone hero bpm converter made by Not El Donte and Klyzx")
+        print("Would you like to learn how to use the custom character template? (y/n)")
+        if input("") == "y":
+            clear()
+            print("1. Replace the black in template1.png and template2.png with the color of your background.")
+            print("2. On template1.png paste in your the first frame of sprite in a new layer. Move it to the desired position.")
+            print("3. On template2.png paste in your the second frame of sprite in a new layer. Make sure the two sprites are in the same position.")
+            print("4. Save the pngs as charactername1.png and charactername2.png respectively. Replace charactername with the name of your character.")
+            print("5. In your level add a Boy row on where you want the character to be. Make sure he is the only character in the room.")
+            print("Press any key when you are finished with this.")
+            waitforkey()
+
+
+        bpmeasure = int(input("What is your crotchet length? (default is 8)"))
+        startmeasure = int(input("At what measure should this character appear?"))
+        startbeat = float(input("At what beat should this character appear?"))
+        repeatnumber = int(input("For how many beats should this character stay?"))
+        charname = input("What is the name of the character")
+        yval = int(input("editor Y value? (if unsure, 0)"))
+        room = int(input("What room is the Boy in?"))
+        clear()
+        print("processing...")
+        i = 1
+        if path.exists("output/output.txt"):
+            os.remove("output/output.txt")
+        barone = startmeasure
+        beatone = startbeat
+        while i < repeatnumber + 1:
+            if beatone >= bpmeasure + 1:
+                beatone = beatone - bpmeasure
+                barone = barone + 1
+            with open("output/output.txt", "a") as outputfile:
+                outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + '1.png", "scrollX": 0, "scrollY": 0 }, ' + '\n')
+                outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone + 0.25) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + '2.png", "scrollX": 0, "scrollY": 0 }, ' + '\n')
+            beatone = beatone + 1
+            i = i + 1
+        print("Done! Open output.txt and copy the contents to the .rdlevel file")
         waitforkey()
         clear()
     if selection == "7":
+        print("Effect repeater, Gif importer, Stepmania/itg bpm converter, grade calculator and easy custom characters were made with <3 by DPS2004")
+        print("Clone hero bpm converter made by Not El Donte and Klyzx")
+        waitforkey()
+        clear()
+    if selection == "8":
         break
