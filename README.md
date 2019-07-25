@@ -3,7 +3,11 @@ Scalpel: a Python toolset for Rhythm Doctor
 
 
 
+<<<<<<< HEAD
 Just download the entire thing and run the .bat file.
+=======
+just download the entire thing and run the .bat file.
+>>>>>>> 1486253d1bb82cbe7607c905a1248cd5acef2f40
 
 This uses Pillow, so make sure you have that installed.
 
