@@ -1,23 +1,17 @@
 # Scalpel
 Scalpel: a Python toolset for Rhythm Doctor
 
-
-
-<<<<<<< HEAD
-Just download the entire thing and run the .bat file.
-=======
 just download the entire thing and run the .bat file.
->>>>>>> 1486253d1bb82cbe7607c905a1248cd5acef2f40
 
 This uses Pillow, so make sure you have that installed.
 
-# Breif description of tools in the program
+# Brief description of tools in the program
 
 * Effect Repeater: Repeats any two effects for any amount of time. Pretty self explanatory, but can be used for complicated effects.
 
 * Grade Calculator: The most simple tool. Run your song without Otto and with offsets on, and input the number of misses. It gives you the right numbers for the grades.
 
-* Gif Exporter: Splits an animated Gif into its frames, and generates level code to display those frames in the right order with the right timing. MP4 support coming soon™
+* Gif Exporter: Splits an animated Gif into its frames, and generates level code to display those frames in the right order with the right timing. MP4 support coming soonâ„¢
 
 * Clone Hero BPM Converter: Tool made by Not El Donte and Klyzx. Converts a Clone Hero file into Rhythm Doctor BPM events.
 
