@@ -4,9 +4,8 @@ import glob
 import sys
 import re
 import msvcrt
-
-consoleinput = "false"
 from PIL import Image
+consoleinput = "false"
 #IF THINGS ARE NOT WORKING, UNCOMMENT THE FOLLOWING LINE.
 #consoleinput = "true"
 def filelen(file):
@@ -77,7 +76,9 @@ def giflook(inGif):
         except EOFError:
             break;
     files = glob.glob("output/*.gif")
-
+    with open("nframes.temp", "a") as outputfile:
+        outputfile.write(str(nframes))
+    print(findline("nframes.temp", 1) + " frames exported")
     for imageFile in files:
         filepath, filename = os.path.split(imageFile)
         filterame, exts = os.path.splitext(filename)
@@ -123,7 +124,7 @@ while 0 == 0:
     print("2. Grade calculator")
     print("3. GIF exporter")
     print("4. Clone hero BPM converter")
-    print("5. Stepmania/itg bpm converter")
+    print("5. Stepmania/itg BPM converter")
     print("6. Easy Custom Characters")
     print("7. Credits")
     print("8. Exit")
@@ -181,7 +182,9 @@ while 0 == 0:
         print("Done processing.")
         cleanup("n")
         bpm = int(input("bpm of the song?"))
-        framecount = int(input("How many frames?"))
+        print(nframes)
+        framecount = int(findline("nframes.temp", 1)) - 1
+        os.remove("nframes.temp")
         loopcount = int(input("How many times do you want this gif to play?"))
         bpmeasure = int(input("What is your chrotchet length? (default is 8)"))
         startmeasure = int(input("What measure should this GIF start at?"))
@@ -216,24 +219,36 @@ while 0 == 0:
     if selection == "4":
         clear()
         infile = input("Enter clone hero file: ")
-        spacing = int(input("In CH - How long is one beat in position: ")) * 2
-        crotchet = int(input("In RD - What is your crotchet length: "))
-        space = int(input("How many spaces for indentation? (if unsure, put 2)"))
-        if path.exists("output/output.txt"):
-            os.remove("output/output.txt")
-        outfilewrite = open("output/output.txt", 'w')
-        print("Processing...")
-
+        outfile = "output/output.txt"
+        autofindres = "a"
+        while autofindres != "y" and autofindres != "n":
+            autofindres = input("Automatically find resolution? (y for yes, n for no): ")
+            if autofindres == "y":
+                autores = True
+            elif autofindres == "n":
+                autores = False
+                spacing = int(input("In CH - How long is one beat in position: "))
+        crochet = int(input("In RD - What is your crochet length: "))
 
         try:
+            outfilewrite = open(outfile, 'w')
             with open(infile) as file:
                 syncfound = False
+                resfound = False
                 for line in file:
                     line = line[:-1]  # Remove \n from end of each line
+                    line = line.lstrip();
+                    info = line.split(' ')
+
+                    if info[0] != "Resolution" and resfound == False and autores == True:
+                        continue
+                    elif info[0] == "Resolution" and resfound == False and autores == True:
+                        spacing = int(info[2]) / 2
+                        resfound = True
 
                     if line != "[SyncTrack]" and syncfound == False:
                         continue
-                    elif syncfound == False:  # Skip until the Sync Track section
+                    elif line == "[SyncTrack]" and syncfound == False:  # Skip until the Sync Track section
                         file.readline()
                         file.readline()
                         file.readline()  # Don't need the original bpm or time sig
@@ -242,23 +257,23 @@ while 0 == 0:
                     if line == "}":  # End at the end of the bpm section
                         break
 
-                    info = line.split(' ')
-                    if info[space + 2] == "TS":  # Don't worry about time signature changes
+                    if info[2] == "TS":  # Don't worry about time signature changes
                         continue
 
-                    bpm = str(float(info[space + 3]) / 1000)  # math
-                    bar = str(int(int(info[space]) / spacing / crotchet) + 1)
-                    beat = str(float(int(info[space]) / spacing % crotchet) + 1)
-                    rdstr = '        { "bar": ' + bar + ', "beat": ' + beat + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + bpm + ' },\n'
+                    bpm = str(float(info[3]) / 1000)  # math
+                    bar = str(int(int(info[0]) / spacing / crochet) + 1)
+                    beat = str(float(int(info[0]) / spacing % crochet) + 1)
+                    rdstr = '\t\t{ "bar": ' + bar + ', "beat": ' + beat + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + bpm + ' },\n'
                     outfilewrite.write(rdstr)
                 outfilewrite.close()
-            print("Done! Open output.txt and copy the contents to the .rdlevel file")
+            print("Open Output.txt and copy the contents to the .rdlevel file")
             waitforkey()
             clear()
-        except:
+        except FileNotFoundError:
             print("CH file not found")
             waitforkey()
             clear()
+
     if selection == "5":
         clear()
         smfile = input("fileame of .sm file?")
@@ -303,7 +318,8 @@ while 0 == 0:
             print("1. Replace the black in template1.png and template2.png with the color of your background.")
             print("2. On template1.png paste in your the first frame of sprite in a new layer. Move it to the desired position.")
             print("3. On template2.png paste in your the second frame of sprite in a new layer. Make sure the two sprites are in the same position.")
-            print("4. Save the pngs as charactername1.png and charactername2.png respectively. Replace charactername with the name of your character.")
+            print("3.5. Repeat for additional frames")
+            print("4. Save the pngs as charactername1-8.png. Replace charactername with the name of your character.")
             print("5. In your level add a Boy row on where you want the character to be. Make sure he is the only character in the room.")
             print("Press any key when you are finished with this.")
             waitforkey()
@@ -314,6 +330,8 @@ while 0 == 0:
         startbeat = float(input("At what beat should this character appear?"))
         repeatnumber = int(input("For how many beats should this character stay?"))
         charname = input("What is the name of the character")
+        animoffset = float(input("What is the offset per beat for the frames of animation? (default is 0.25)"))
+        numframes = int(input("How many frames does this character have? (default is 2)"))
         yval = int(input("editor Y value? (if unsure, 0)"))
         room = int(input("What room is the Boy in?"))
         clear()
@@ -327,9 +345,11 @@ while 0 == 0:
             if beatone >= bpmeasure + 1:
                 beatone = beatone - bpmeasure
                 barone = barone + 1
-            with open("output/output.txt", "a") as outputfile:
-                outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + '1.png", "scrollX": 0, "scrollY": 0 }, ' + '\n')
-                outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone + 0.25) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + '2.png", "scrollX": 0, "scrollY": 0 }, ' + '\n')
+            itwo = 0
+            while itwo < numframes:
+                with open("output/output.txt", "a") as outputfile:
+                    outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone + (itwo * animoffset)) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + str((itwo + 1)) + '.png", "scrollX": 0, "scrollY": 0 }, ' + '\n')
+                itwo = itwo + 1
             beatone = beatone + 1
             i = i + 1
         print("Done! Open output.txt and copy the contents to the .rdlevel file")
