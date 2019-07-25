@@ -182,7 +182,6 @@ while 0 == 0:
         print("Done processing.")
         cleanup("n")
         bpm = int(input("bpm of the song?"))
-        print(nframes)
         framecount = int(findline("nframes.temp", 1)) - 1
         os.remove("nframes.temp")
         loopcount = int(input("How many times do you want this gif to play?"))
