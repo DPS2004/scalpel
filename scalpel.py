@@ -180,10 +180,9 @@ while 0 == 0:
         print("Processing gif...")
         giffps = giflook(gifname)
         print("Done processing.")
-        cleanup("n")
         bpm = int(input("bpm of the song?"))
         framecount = int(findline("nframes.temp", 1)) - 1
-        os.remove("nframes.temp")
+        cleanup("n")
         loopcount = int(input("How many times do you want this gif to play?"))
         bpmeasure = int(input("What is your chrotchet length? (default is 8)"))
         startmeasure = int(input("What measure should this GIF start at?"))
