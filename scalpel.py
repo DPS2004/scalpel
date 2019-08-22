@@ -147,8 +147,9 @@ while 0 == 0:
         beatone = startbeat
         while i < repeatnumber + 1:
             if beatone >= bpmeasure + 1:
-                beatone = beatone - bpmeasure
-                barone = barone + 1
+                while beatone >= bpmeasure + 1:
+                    beatone = beatone - bpmeasure
+                    barone += 1
 
             effectone = '		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', ' + firstblock + '\n'
             bartwo = barone
@@ -202,8 +203,9 @@ while 0 == 0:
 
             while itwo < framecount + 1:
                 if beatone >= bpmeasure + 1:
-                    beatone = beatone - bpmeasure
-                    barone = barone + 1
+                    while beatone >= bpmeasure + 1:
+                        beatone = beatone - bpmeasure
+                        barone += 1
 
                 with open("output/output.txt", "a") as outputfile:
                     outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', "y": ' + str(yval) + ', "type": "SetBackgroundColor", "rooms": [' + str(room) + '], "backgroundType": "Image", "contentMode": "' + contentmode + '", "color": "ffffff", "image": "output' + str(itwo) + '.png", "filter": "NearestNeighbor", "scrollX": 0, "scrollY": 0 }, ' + '\n')
@@ -341,8 +343,9 @@ while 0 == 0:
         beatone = startbeat
         while i < repeatnumber + 1:
             if beatone >= bpmeasure + 1:
-                beatone = beatone - bpmeasure
-                barone = barone + 1
+                while beatone >= bpmeasure + 1:
+                    beatone = beatone - bpmeasure
+                    barone += 1
             itwo = 0
             while itwo < numframes:
                 with open("output/output.txt", "a") as outputfile:
