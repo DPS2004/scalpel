@@ -315,12 +315,12 @@ while 0 == 0:
         print("Would you like to learn how to use the custom character template? (y/n)")
         if input("") == "y":
             clear()
-            print("1. Replace the black in template1.png and template2.png with the color of your background.")
+            print("1. open template1 and template2 in your image editor")
             print("2. On template1.png paste in your the first frame of sprite in a new layer. Move it to the desired position.")
             print("3. On template2.png paste in your the second frame of sprite in a new layer. Make sure the two sprites are in the same position.")
             print("3.5. Repeat for additional frames")
             print("4. Save the pngs as charactername1-8.png. Replace charactername with the name of your character.")
-            print("5. In your level add a Boy row on where you want the character to be. Make sure he is the only character in the room.")
+            print("5. In your level add a None row on where you want the character to be. Make sure it is the only character in the room.")
             print("Press any key when you are finished with this.")
             waitforkey()
 
@@ -333,7 +333,7 @@ while 0 == 0:
         animoffset = float(input("What is the offset per beat for the frames of animation? (default is 0.25)"))
         numframes = int(input("How many frames does this character have? (default is 2)"))
         yval = int(input("editor Y value? (if unsure, 0)"))
-        room = int(input("What room is the Boy in?"))
+        room = int(input("What room is the None in?"))
         clear()
         print("processing...")
         i = 1
