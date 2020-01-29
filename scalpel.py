@@ -140,10 +140,10 @@ while True:
     if selection == "1":
         clear()
         bpmeasure = int(input("What is your crotchet length? (default is 8)"))
-        firstblock = input('What is the first block? (copy and paste from "y":, to },)') # noqa
+        firstblock = input('What is the first block? (copy and paste from "y":, to },)')
         secondblock = input('What is the second block? (same format as first)')
-        blockdistance = float(input("What is the distance between these events in beats?")) # noqa
-        effectdistance = float(input("What is the distance between the first first block and the second first block?")) # noqa
+        blockdistance = float(input("What is the distance between these events in beats?"))
+        effectdistance = float(input("What is the distance between the first first block and the second first block?"))
         startmeasure = int(input("What measure should this effect start?"))
         startbeat = float(input("What beat should this effect start?"))
         repeatnumber = int(input("How many times should this effect repeat?"))
@@ -159,25 +159,25 @@ while True:
                     beatone = beatone - bpmeasure
                     barone += 1
 
-            effectone = '		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', ' + firstblock + '\n' # noqa
+            effectone = '		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', ' + firstblock + '\n'
             bartwo = barone
             beattwo = beatone + blockdistance
             if beattwo >= bpmeasure + 1:
                 beattwo = beattwo - bpmeasure
                 bartwo = bartwo + 1
-            effecttwo = '		{ "bar": ' + str(int(bartwo)) + ', "beat": ' + str(beattwo) + ', ' + secondblock + '\n' # noqa
+            effecttwo = '		{ "bar": ' + str(int(bartwo)) + ', "beat": ' + str(beattwo) + ', ' + secondblock + '\n'
             with open("output.txt", "a") as outputfile:
                 outputfile.write(effectone)
                 outputfile.write(effecttwo)
             beatone = beatone + effectdistance
             i = i + 1
-        print("Done! Open output.txt and copy the contents to the .rdlevel file") # noqa
+        print("Done! Open output.txt and copy the contents to the .rdlevel file")
         waitforkey()
         clear()
 
     if selection == "2":
         clear()
-        hitcount = int(input("how many times does the player have to hit a button? (do not count cpu rows)")) # noqa
+        hitcount = int(input("how many times does the player have to hit a button? (do not count cpu rows)"))
         print("A rank: " + str(round(hitcount*0.1)) + " misses.")
         print("B rank: " + str(round(hitcount*0.2)) + " misses")
         print("C rank: " + str(round(hitcount*0.3)) + " misses")
@@ -197,7 +197,7 @@ while True:
         bpmeasure = int(input("What is your chrotchet length? (default is 8)"))
         startmeasure = int(input("What measure should this GIF start at?"))
         startbeat = int(input("What beat? "))
-        contentmode = input("how should it be scaled?(ScaleToFill, AspectFit, AspectFill, Center, Tiled)") # noqa
+        contentmode = input("how should it be scaled?(ScaleToFill, AspectFit, AspectFill, Center, Tiled)")
         room = int(input("what room?(if unsure, 0)"))
         yval = int(input("editor Y value? (if unsure, 0)"))
         print("Processing...")
@@ -217,12 +217,12 @@ while True:
                         barone += 1
 
                 with open("output/output.txt", "a") as outputfile:
-                    outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', "y": ' + str(yval) + ', "type": "SetBackgroundColor", "rooms": [' + str(room) + '], "backgroundType": "Image", "contentMode": "' + contentmode + '", "color": "ffffff", "image": "output' + str(itwo) + '.png", "filter": "NearestNeighbor", "scrollX": 0, "scrollY": 0 }, ' + '\n') # noqa
+                    outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone) + ', "y": ' + str(yval) + ', "type": "SetBackgroundColor", "rooms": [' + str(room) + '], "backgroundType": "Image", "contentMode": "' + contentmode + '", "color": "ffffff", "image": "output' + str(itwo) + '.png", "filter": "NearestNeighbor", "scrollX": 0, "scrollY": 0 }, ' + '\n')
 
                 beatone = beatone + bpf
                 itwo = itwo + 1
             i = i + 1
-        print("Done! Open output.txt in the output folder and copy the contents to the .rdlevel file")  # noqa
+        print("Done! Open output.txt in the output folder and copy the contents to the .rdlevel file")
         waitforkey()
         clear()
 
@@ -247,12 +247,12 @@ while True:
         autofindres = "a"
         resfound = False
         while autofindres != "y" and autofindres != "n":
-            autofindres = input("Automatically find resolution? (y for yes, n for no): ") # noqa
+            autofindres = input("Automatically find resolution? (y for yes, n for no): ")
             if autofindres == "y":
                 autores = True
             elif autofindres == "n":
                 autores = False
-                spacing = int(input("In CH - How long is one beat in position: ")) # noqa
+                spacing = int(input("In CH - How long is one beat in position: "))
 
         crochet = int(input("In RD - What is your crochet length: "))
 
@@ -285,11 +285,11 @@ while True:
                 bpm = str(float(info[3])/1000)
                 bar = str(int(int(info[0])/spacing/crochet)+1)
                 beat = str(float(int(info[0])/spacing % crochet)+1)
-                rdstr = '        { "bar": ' + bar + ', "beat": ' + beat + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + bpm + ' },\n' # noqa
+                rdstr = '        { "bar": ' + bar + ', "beat": ' + beat + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + bpm + ' },\n'
                 outfilewrite.write(rdstr)
             outfilewrite.close()
             file.close()
-            print("Open", outfile, "and copy the contents to the .rdlevel file") # noqa
+            print("Open", outfile, "and copy the contents to the .rdlevel file")
             waitforkey()
             clear()
         except BaseException:
@@ -303,7 +303,7 @@ while True:
         smparse(smfile)
         newfile = input("make a new .rdlevel file?(y or n)")
         if newfile == "n":
-            bpmeasure = int(input("What is your crotchet length? (default is 8)")) # noqa
+            bpmeasure = int(input("What is your crotchet length? (default is 8)"))
         else:
             bpmeasure = 8
         if newfile == "y":
@@ -311,20 +311,20 @@ while True:
                 os.remove("output/output.rdlevel")
             outname = "output/output.rdlevel"
             with open(outname, "a") as outputfile:
-                outputfile.write('{' + '\n' + '	"settings":' + '\n' + '	{' + '\n' + '		"version": 26, ' + '\n' + '		"artist": "", ' + '\n' + '		"song": "", ' + '\n' + '		"author": "", ' + '\n' + '		"previewImage": "", ' + '\n' + '		"previewSong": "", ' + '\n' + '		"previewSongStartTime": 0, ' + '\n' + '		"previewSongDuration": 10, ' + '\n' + '		"description": "", ' + '\n' + '		"tags": "", ' + '\n' + '		"separate2PLevelFilename": "", ' + '\n' + '		"levelMode": "", ' + '\n' + '		"firstBeatBehavior": "RunNormally", ' + '\n' + '		"multiplayerAppearance": "HorizontalStrips", ' + '\n' + '		"rankMaxMistakes": [20, 15, 10, 5], ' + '\n' + '		"rankDescription":' + '\n' + '		[' + '\n' + '			"Better call 911, now!",' + '\n' + '			"Ugh, you can do better",' + '\n' + '			"Not bad I guess...",' + '\n' + '			"We make a good team!",' + '\n' + '			"You are really good!",' + '\n' + '			"Wow! Thats awesome!!"' + '\n' + '		]' + '\n' + '	},' + '\n' + '	"rows":' + '\n' + '	[' + '\n' + '	],' + '\n' + '	"events":' + '\n' + '	[' + '\n') # noqa
+                outputfile.write('{' + '\n' + '	"settings":' + '\n' + '	{' + '\n' + '		"version": 26, ' + '\n' + '		"artist": "", ' + '\n' + '		"song": "", ' + '\n' + '		"author": "", ' + '\n' + '		"previewImage": "", ' + '\n' + '		"previewSong": "", ' + '\n' + '		"previewSongStartTime": 0, ' + '\n' + '		"previewSongDuration": 10, ' + '\n' + '		"description": "", ' + '\n' + '		"tags": "", ' + '\n' + '		"separate2PLevelFilename": "", ' + '\n' + '		"levelMode": "", ' + '\n' + '		"firstBeatBehavior": "RunNormally", ' + '\n' + '		"multiplayerAppearance": "HorizontalStrips", ' + '\n' + '		"rankMaxMistakes": [20, 15, 10, 5], ' + '\n' + '		"rankDescription":' + '\n' + '		[' + '\n' + '			"Better call 911, now!",' + '\n' + '			"Ugh, you can do better",' + '\n' + '			"Not bad I guess...",' + '\n' + '			"We make a good team!",' + '\n' + '			"You are really good!",' + '\n' + '			"Wow! Thats awesome!!"' + '\n' + '		]' + '\n' + '	},' + '\n' + '	"rows":' + '\n' + '	[' + '\n' + '	],' + '\n' + '	"events":' + '\n' + '	[' + '\n')
         else:
             if path.exists("output/output.txt"):
                 os.remove("output/output.txt")
             outname = "output/output.txt"
         with open(outname, "a") as outputfile:
-            outputfile.write('		{ "bar": 1, "beat": 1, "y": 0, "type": "PlaySong", "filename": "' + findline("smaud.temp", 1) + '", "volume": 100, "offset": ' + findline("smoff.temp", 1) + ', "bpm": ' + findline("smbpm.temp", 2)[:-1] + ' }, ' + '\n') # noqa
+            outputfile.write('		{ "bar": 1, "beat": 1, "y": 0, "type": "PlaySong", "filename": "' + findline("smaud.temp", 1) + '", "volume": 100, "offset": ' + findline("smoff.temp", 1) + ', "bpm": ' + findline("smbpm.temp", 2)[:-1] + ' }, ' + '\n')
         bpmcount = 2
         while bpmcount < filelen("smbpm.temp"):
-            beatone = (float(findline("smbpm.temp", bpmcount + 1)[:-1]) % bpmeasure) + 1 # noqa
-            barone = float(findline("smbpm.temp", bpmcount + 1)[:-1]) / bpmeasure # noqa
+            beatone = (float(findline("smbpm.temp", bpmcount + 1)[:-1]) % bpmeasure) + 1
+            barone = float(findline("smbpm.temp", bpmcount + 1)[:-1]) / bpmeasure
             newbpm = float(findline("smbpm.temp", bpmcount + 2)[:-1])
             with open(outname, "a") as outputfile:
-                outputfile.write('		{ "bar": ' + str(round(barone)) + ', "beat": ' + str(beatone) + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + str(abs(newbpm)) + ' }, ' + '\n') # noqa
+                outputfile.write('		{ "bar": ' + str(round(barone)) + ', "beat": ' + str(beatone) + ', "y": 0, "type": "SetBeatsPerMinute", "beatsPerMinute": ' + str(abs(newbpm)) + ' }, ' + '\n')
             bpmcount = bpmcount + 2
         if newfile == "y":
             with open(outname, "a") as outputfile:
@@ -335,25 +335,25 @@ while True:
 
     if selection == "6":
         clear()
-        print("Would you like to learn how to use the custom character template? (y/n)") # noqa
+        print("Would you like to learn how to use the custom character template? (y/n)")
         if input("") == "y":
             clear()
             print("1. open template1 and template2 in your image editor")
-            print("2. On template1.png paste in your the first frame of sprite in a new layer. Move it to the desired position.") # noqa
-            print("3. On template2.png paste in your the second frame of sprite in a new layer. Make sure the two sprites are in the same position.") # noqa
+            print("2. On template1.png paste in your the first frame of sprite in a new layer. Move it to the desired position.")
+            print("3. On template2.png paste in your the second frame of sprite in a new layer. Make sure the two sprites are in the same position.")
             print("3.5. Repeat for additional frames")
-            print("4. Save the pngs as charactername1-8.png. Replace charactername with the name of your character.") # noqa
-            print("5. In your level add a None row on where you want the character to be. Make sure it is the only character in the room.") # noqa
+            print("4. Save the pngs as charactername1-8.png. Replace charactername with the name of your character.")
+            print("5. In your level add a None row on where you want the character to be. Make sure it is the only character in the room.")
             print("Press any key when you are finished with this.")
             waitforkey()
 
         bpmeasure = int(input("What is your crotchet length? (default is 8)"))
-        startmeasure = int(input("At what measure should this character appear?")) # noqa
+        startmeasure = int(input("At what measure should this character appear?"))
         startbeat = float(input("At what beat should this character appear?"))
-        repeatnumber = int(input("For how many beats should this character stay?")) # noqa
+        repeatnumber = int(input("For how many beats should this character stay?"))
         charname = input("What is the name of the character")
-        animoffset = float(input("What is the offset per beat for the frames of animation? (default is 0.25)")) # noqa
-        numframes = int(input("How many frames does this character have? (default is 2)")) # noqa
+        animoffset = float(input("What is the offset per beat for the frames of animation? (default is 0.25)"))
+        numframes = int(input("How many frames does this character have? (default is 2)"))
         yval = int(input("editor Y value? (if unsure, 0)"))
         room = int(input("What room is the None in?"))
         clear()
@@ -371,16 +371,16 @@ while True:
             itwo = 0
             while itwo < numframes:
                 with open("output/output.txt", "a") as outputfile:
-                    outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone + (itwo * animoffset)) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + str((itwo + 1)) + '.png", "scrollX": 0, "scrollY": 0 }, ' + '\n') # noqa
+                    outputfile.write('		{ "bar": ' + str(int(barone)) + ', "beat": ' + str(beatone + (itwo * animoffset)) + ', "y": ' + str(yval) + ', "type": "SetForeground", "rooms": [' + str(room) + '], "contentMode": "ScaleToFill", "color": "ffffffff", "image": "' + charname + str((itwo + 1)) + '.png", "scrollX": 0, "scrollY": 0 }, ' + '\n')
                 itwo = itwo + 1
             beatone = beatone + 1
             i = i + 1
-        print("Done! Open output.txt and copy the contents to the .rdlevel file") # noqa
+        print("Done! Open output.txt and copy the contents to the .rdlevel file")
         waitforkey()
         clear()
 
     if selection == "7":
-        print("Effect repeater, Gif importer, Stepmania/itg bpm converter, grade calculator and easy custom characters were made with <3 by DPS2004") # noqa
+        print("Effect repeater, Gif importer, Stepmania/itg bpm converter, grade calculator and easy custom characters were made with <3 by DPS2004")
         print("Clone hero bpm converter made by Not El Donte and Klyzx")
         waitforkey()
         clear()
